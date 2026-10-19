@@ -1,0 +1,44 @@
+﻿@model IEnumerable<LeaveManagementSystem.Models.LeaveType>
+
+@{
+    ViewData["Title"] = "Leave Types";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h2 class="mb-0 text-dark fw-bold">Leave Categories</h2>
+            <a asp-action="Create" class="btn btn-primary shadow-sm">Add Leave Type</a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Leave Name</th>
+                            <th>Max Days Limit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="ps-4 fw-semibold text-secondary">@item.LeaveName</td>
+                                    <td>@(item.MaxDays.HasValue ? item.MaxDays.Value.ToString() : "No Limit")</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2" class="text-center text-muted py-4">No categories configured yet.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

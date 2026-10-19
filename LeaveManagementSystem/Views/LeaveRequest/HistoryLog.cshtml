@@ -1,0 +1,86 @@
+﻿@model IEnumerable<LeaveManagementSystem.Models.LeaveRequest>
+
+@{
+    ViewData["Title"] = "Personal Leave History Log";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <div class="row align-items-center g-3">
+                <div class="col-md-5">
+                    <h2 class="mb-0 text-dark fw-bold text-truncate">Leave Log History: <span class="text-primary">@ViewBag.EmployeeName</span></h2>
+                </div>
+
+                <!-- ======================================================================= -->
+                <!-- ROLE PRIVILEGE SHIELD: HIDE EMPLOYEE FILTER FOR SENSITIVE PRIVACY       -->
+                <!-- ======================================================================= -->
+                <div class="col-md-7 text-md-end">
+                    @if (Context.Session.GetString("UserRole") == "Manager")
+                    {
+                        <!-- Only Managers get to see the dropdown search profile console -->
+                        <form asp-action="HistoryLog" method="get" class="d-flex justify-content-md-end align-items-center gap-2 m-0">
+                            <label class="fw-bold text-secondary text-nowrap mb-0 small">Select Employee Profile:</label>
+                            <select name="employeeId" class="form-select form-select-sm w-50" asp-items="ViewBag.EmployeeList" onchange="this.form.submit()">
+                            </select>
+                            <a asp-action="Index" class="btn btn-sm btn-dark text-nowrap px-3">Back to Matrix</a>
+                        </form>
+                    }
+                    else
+                    {
+                        <!-- Standard employees only see a simple, non-interactive back shortcut link to their home cockpit -->
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-sm btn-secondary px-4 fw-bold shadow-sm">
+                            <i class="bi bi-arrow-left me-1"></i>Back to Home Dashboard
+                        </a>
+                    }
+                </div>
+                <!-- ======================================================================= -->
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Leave Category Allocation</th>
+                            <th>Timeline Interval Window</th>
+                            <th class="text-center">Days Computed</th>
+                            <th class="text-center">Current Matrix Status</th>
+                            <th class="ps-3" style="width: 35%;">Resolution Logs / Remarks context</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                string statusBadge = item.Status == "Approved" ? "bg-success" : item.Status == "Rejected" ? "bg-danger" : "bg-warning text-dark";
+                                <tr>
+                                    <td class="ps-4 fw-semibold text-dark">@item.LeaveType?.LeaveName</td>
+                                    <td class="small text-secondary">@item.FromDate.ToString("yyyy-MM-dd") to @item.ToDate.ToString("yyyy-MM-dd")</td>
+                                    <td class="text-center fw-bold text-secondary">@item.NumberOfDays</td>
+                                    <td class="text-center">
+                                        <span class="badge @statusBadge px-3 py-1 text-uppercase fw-bold">@item.Status</span>
+                                    </td>
+                                    <td class="ps-3 text-muted small i">
+                                        @(string.IsNullOrWhiteSpace(item.Comments) ? "No remarks tracked inside database row index." : item.Comments)
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-5">
+                                    <i class="bi bi-folder-x display-6 d-block mb-2 text-neutral-400"></i>
+                                    No personal historical leave records submitted or processed yet.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

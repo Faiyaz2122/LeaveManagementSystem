@@ -1,0 +1,90 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign In - Leave Management System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://jsdelivr.net" />
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+            <div class="col-md-4">
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm small fw-bold mb-3" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <div class="card shadow border-0 rounded-3 bg-white p-4">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-dark m-0"><i class="bi bi-shield-lock-fill text-primary me-2"></i>Sign In</h3>
+                        <p class="text-muted small mt-1">Access your organizational leave dashboard workspace</p>
+                    </div>
+
+                    <form asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small fw-bold text-danger mb-3"></div>
+
+                        <!-- UPDATED: Username Input Field -->
+                        <div class="form-group mb-3">
+                            <label class="form-label small fw-bold text-secondary">Username</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-person"></i></span>
+                                <input type="text" name="username" class="form-control border-start-0" placeholder="Enter username" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <label class="form-label small fw-bold text-secondary mb-0">Password</label>
+                                <a href="#" class="text-decoration-none small fw-semibold text-primary" data-bs-toggle="modal" data-bs-target="#forgotPasswordModal">Forgot Password?</a>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-key"></i></span>
+                                <input type="password" name="password" class="form-control border-start-0" placeholder="••••••••" required />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm mb-3 mt-2">Login to Account</button>
+
+                        <div class="text-center border-top pt-3">
+                            <span class="small text-muted">New user profile? <a asp-action="Signup" class="text-decoration-none fw-bold text-success">Create an Account</a></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-dark text-white py-3">
+                    <h5 class="modal-title fw-bold" id="forgotPasswordModalLabel"><i class="bi bi-info-circle-fill me-2 text-warning"></i>Password Recovery Policy</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <i class="bi bi-person-workspace text-muted display-4 mb-3 d-block"></i>
+                    <h5 class="fw-bold text-dark mb-2">Contact System HR Admin</h5>
+                    <p class="text-secondary small mb-0">Please request an active **Manager / System Administrator** to execute a password reset override on your account row register entry!</p>
+                </div>
+                <div class="modal-footer bg-light border-0 py-2">
+                    <button type="button" class="btn btn-sm btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Understand</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

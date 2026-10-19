@@ -1,0 +1,97 @@
+﻿@model IEnumerable<LeaveManagementSystem.Models.LeaveRequest>
+
+@{
+    ViewData["Title"] = "Leave Dashboard";
+}
+
+<div class="container mt-4">
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Workflow status notification alert headers -->
+    @if (TempData["WorkflowSuccess"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm mb-3" role="alert">
+            <strong>Process Complete:</strong> @TempData["WorkflowSuccess"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["WorkflowError"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-3" role="alert">
+            <strong>System Flag Warning:</strong> @TempData["WorkflowError"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h2 class="mb-0 text-dark fw-bold">Leave Management Matrix</h2>
+            <a asp-action="Create" class="btn btn-primary shadow-sm">Apply For Leave</a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Employee</th>
+                            <th>Category</th>
+                            <th>Duration Period</th>
+                            <th class="text-center">Days</th>
+                            <th class="text-center">Workflow Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                string statusBadge = item.Status == "Approved" ? "bg-success" : item.Status == "Rejected" ? "bg-danger" : "bg-warning text-dark";
+                                <tr>
+                                    <td class="ps-4 fw-semibold text-secondary">@item.Employee?.Name</td>
+                                    <td>@item.LeaveType?.LeaveName</td>
+                                    <td>@item.FromDate.ToString("yyyy-MM-dd") to @item.ToDate.ToString("yyyy-MM-dd")</td>
+                                    <td class="text-center fw-bold">@item.NumberOfDays</td>
+                                    <td class="text-center"><span class="badge @statusBadge">@item.Status</span></td>
+
+                                    <!-- ========================================================== -->
+                                    <!-- PLACED HERE: UPDATED INTERACTIVE ACTIONS CELL              -->
+                                    <!-- ========================================================== -->
+                                    <td class="text-center">
+                                        @if (item.Status == "Pending")
+                                        {
+                                            <!-- Action state routing for pending elements -->
+                                            <a asp-action="ProcessApproval" asp-route-id="@item.LeaveRequestId" class="btn btn-sm btn-outline-primary px-3 fw-bold">
+                                                Review Case
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <!-- Action state routing to update already evaluated rows -->
+                                            <a asp-action="ProcessApproval" asp-route-id="@item.LeaveRequestId" class="btn btn-sm btn-outline-dark px-2 fw-semibold">
+                                                Change Decision
+                                            </a>
+                                        }
+                                    </td>
+                                    <!-- ========================================================== -->
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-4">No records submitted across current active tracking index registers.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

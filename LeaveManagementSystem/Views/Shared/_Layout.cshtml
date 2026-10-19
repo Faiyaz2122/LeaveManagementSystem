@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - LeaveManagementSystem</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://jsdelivr.net" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/LeaveManagementSystem.styles.css" asp-append-version="true" />
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid d-flex justify-content-between align-items-center px-4">
+
+                <!-- Left Side: Home Button Link -->
+                <div>
+                    <a class="btn btn-sm btn-outline-secondary" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-house-door-fill me-1"></i>Home
+                    </a>
+                </div>
+
+                <!-- Center: Main Title Header -->
+                <div class="text-center">
+                    <a class="navbar-brand fw-bold fs-4 m-0 text-dark" asp-controller="Home" asp-action="Index">
+                        Leave Management System
+                    </a>
+                </div>
+
+                <!-- Right Side: Role-Based Nav Control Buttons Group -->
+                <div class="d-flex gap-2 align-items-center">
+                    <!-- SHARED ACTIONS (Visible to authenticated users) -->
+                    <a class="btn btn-sm btn-outline-secondary shadow-sm" asp-controller="Home" asp-action="Index">Dashboard</a>
+                    <a class="btn btn-sm text-white shadow-sm" style="background-color: #6610f2;" asp-controller="LeaveRequest" asp-action="HistoryLog">Leave Logs</a>
+                    <a class="btn btn-sm btn-primary shadow-sm" asp-controller="LeaveRequest" asp-action="Create">Apply Leave</a>
+
+                    <!-- ADMINISTRATIVE SHIELD GATE (Only shows for Managers) -->
+                    @if (Context.Session.GetString("UserRole") == "Manager")
+                    {
+                        <span class="text-muted small mx-1">|</span>
+                        <a class="btn btn-sm btn-primary shadow-sm" asp-controller="Department" asp-action="Index">Departments</a>
+                        <a class="btn btn-sm btn-success shadow-sm" asp-controller="Employee" asp-action="Index">Employees</a>
+                        <a class="btn btn-sm btn-info text-white shadow-sm" asp-controller="LeaveType" asp-action="Index">Leave Types</a>
+                        <a class="btn btn-sm btn-dark text-white shadow-sm" asp-controller="LeaveRequest" asp-action="Index">Leave Matrix</a>
+                    }
+
+                    <!-- PROFILE GREETING & LOGOUT TRIGGER -->
+                    @if (Context.Session.GetInt32("UserId") != null)
+                    {
+                        <span class="badge bg-light text-dark border ms-2 py-2 small fw-semibold">
+                            <i class="bi bi-person-fill text-secondary me-1"></i>Hi, @Context.Session.GetString("UserName") (@Context.Session.GetString("UserRole"))
+                        </span>
+                        <a class="btn btn-sm btn-danger px-3 shadow-sm fw-bold" asp-controller="Account" asp-action="Logout">
+                            <i class="bi bi-box-arrow-right me-1"></i>Logout
+                        </a>
+                    }
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+﻿@model IEnumerable<LeaveManagementSystem.Models.Employee>
+
+@{
+    ViewData["Title"] = "Employee Directory Matrix";
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm mb-3" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i><strong>Success:</strong> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i><strong>Security Guard Flag:</strong> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <h2 class="mb-0 text-dark fw-bold"><i class="bi bi-people-fill text-success me-2"></i>Staff Profiles Registry</h2>
+            <a asp-action="Create" class="btn btn-success shadow-sm fw-bold"><i class="bi bi-person-plus me-1"></i>Add New Employee</a>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Staff Member</th>
+                            <th>Email Address</th>
+                            <th class="text-center">Status</th>
+                            <th>Department Team</th>
+                            <th class="text-center" style="width: 28%;">System Clearance Role Control</th>
+                            <th class="text-center" style="width: 15%;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                string activeBadge = item.IsActive ? "bg-success" : "bg-danger";
+                                string activeLabel = item.IsActive ? "Active" : "Inactive";
+
+                                <tr>
+                                    <td class="ps-4 fw-semibold text-dark">@item.Name</td>
+                                    <td class="text-secondary small">@item.Email</td>
+                                    <td class="text-center">
+                                        <span class="badge @activeBadge px-2 py-1 fw-bold text-uppercase" style="font-size: 0.75rem;">@activeLabel</span>
+                                    </td>
+                                    <td class="fw-semibold text-secondary small">@item.Department?.DepartmentName</td>
+
+                                    <!-- ========================================================================= -->
+                                    <!-- FIXED INTEGRATION: INLINE LOOKUP DROPDOWN MAPPING TO DYNAMIC ROLE TABLE   -->
+                                    <!-- ========================================================================= -->
+                                    <td class="text-center px-3">
+                                        <form asp-controller="Employee" asp-action="UpdateInlineRole" method="post" class="d-flex align-items-center gap-1 m-0">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="selectedEmployeeId" value="@item.EmployeeId" />
+
+                                            <select name="newRoleId" class="form-select form-select-sm text-dark fw-semibold bg-white border shadow-sm" onchange="this.form.submit()">
+                                                <!option value="" @(!item.RoleId.HasValue ? "selected" : "")>Standard Worker (NULL)</!option>
+                                                <!option value="1" @(item.SystemRole?.RoleName == "Manager" ? "selected" : "")>Manager Mode</!option>
+                                                <!option value="2" @(item.SystemRole?.RoleName == "Employee" ? "selected" : "")>Employee Mode</!option>
+                                            </select>
+
+                                            @if (item.SystemRole?.RoleName == "Manager")
+                                            {
+                                                <span class="badge bg-dark px-2 py-1 shadow-sm"><i class="bi bi-shield-fill text-warning"></i></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-light text-muted border px-2 py-1"><i class="bi bi-person-fill"></i></span>
+                                            }
+                                        </form>
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="d-inline-flex gap-1">
+                                            <a asp-action="Edit" asp-route-id="@item.EmployeeId" class="btn btn-sm btn-outline-dark">Edit</a>
+                                            <a asp-action="Details" asp-route-id="@item.EmployeeId" class="btn btn-sm btn-outline-secondary">Details</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center text-muted py-5">
+                                    No worker identity profile index records logged inside current system database tables.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

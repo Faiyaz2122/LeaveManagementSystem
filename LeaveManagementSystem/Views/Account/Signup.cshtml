@@ -1,0 +1,87 @@
+﻿@model LeaveManagementSystem.Models.Employee
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Account - Leave Management System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://jsdelivr.net" />
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+            <div class="col-md-5">
+                <div class="card shadow border-0 rounded-3 bg-white p-4 my-4">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-dark m-0"><i class="bi bi-person-plus-fill text-success me-2"></i>Register Profile</h3>
+                        <p class="text-muted small mt-1">Enroll your identity profile into the database platform</p>
+                    </div>
+
+                    <form asp-action="Signup" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <!-- Form Registration Validation Errors box block context -->
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small fw-bold text-danger mb-3"></div>
+
+                        <div class="form-group mb-2">
+                            <label class="form-label small fw-bold text-secondary">Full Name</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-person"></i></span>
+                                <input asp-for="Name" class="form-control border-start-0" placeholder="e.g., John Doe" required />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small fw-semibold"></span>
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label class="form-label small fw-bold text-secondary">Email Address</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Email" type="email" class="form-control border-start-0" placeholder="name@company.com" required />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small fw-semibold"></span>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label class="form-label small fw-bold text-secondary">Department Assignment</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-building"></i></span>
+                                <!-- Dynamically map to one of your 68 corporate lookup departments -->
+                                <select asp-for="DepartmentId" class="form-select border-start-0 text-dark small" asp-items="ViewBag.DepartmentId" required>
+                                    <option value="">-- Choose Corporate Team --</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="DepartmentId" class="text-danger small fw-semibold"></span>
+                        </div>
+
+                        <div class="row g-2 mb-4">
+                            <div class="col-6">
+                                <label class="form-label small fw-bold text-secondary">Create Password</label>
+                                <input asp-for="Password" type="password" class="form-control form-control-sm" placeholder="Min 6 chars" required />
+                                <span asp-validation-for="Password" class="text-danger small fw-semibold"></span>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-bold text-secondary">Confirm Password</label>
+                                <input type="password" name="ConfirmPassword" class="form-control form-control-sm" placeholder="••••••••" required />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100 py-2 fw-bold shadow-sm mb-3">Complete Registration</button>
+
+                        <div class="text-center border-top pt-3">
+                            <!-- Navigation path back to standard login screen layout framework -->
+                            <span class="small text-muted">Already possess an account? <a asp-action="Login" class="text-decoration-none fw-bold text-primary">Sign In here</a></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

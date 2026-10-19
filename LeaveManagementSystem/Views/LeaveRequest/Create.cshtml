@@ -1,0 +1,59 @@
+﻿@model LeaveManagementSystem.Models.LeaveRequest
+
+@{
+    ViewData["Title"] = "Apply for Leave";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6 offset-md-3 card shadow-sm p-4">
+            <h2 class="mb-4 fw-bold">Leave Application Form</h2>
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="EmployeeId" class="form-label fw-bold">Requesting Employee</label>
+                    <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId">
+                        <option value="">-- Choose Employee Profile --</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="LeaveTypeId" class="form-label fw-bold">Leave Classification Category</label>
+                    <select asp-for="LeaveTypeId" class="form-control" asp-items="ViewBag.LeaveTypeId">
+                        <option value="">-- Select Category Type --</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 form-group mb-3">
+                        <label asp-for="FromDate" class="form-label fw-bold"></label>
+                        <input asp-for="FromDate" type="date" class="form-control" />
+                        <span asp-validation-for="FromDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 form-group mb-3">
+                        <label asp-for="ToDate" class="form-label fw-bold"></label>
+                        <input asp-for="ToDate" type="date" class="form-control" />
+                        <span asp-validation-for="ToDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="Comments" class="form-label fw-bold">Statement Notes / Reason</label>
+                    <textarea asp-for="Comments" class="form-control" rows="3" placeholder="Provide reason details here..."></textarea>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary me-2 px-4">Submit Application</button>
+                    <a asp-action="Index" class="btn btn-secondary px-3">Back to Board</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
